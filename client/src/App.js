@@ -1,7 +1,6 @@
 import React from 'react';
 import axios from 'axios';
 import * as moment from 'moment';
-import logo from './logo.svg';
 import './App.css';
 import Form from './Form';
 
@@ -17,16 +16,18 @@ class App extends React.Component {
   componentDidMount() {
     axios.get('http://localhost:8000/api/message')
       .then(res => {
-        this.setState({
-          messages: res.data,
-          todayCount: this.countTodayMessages(res.data),
-          thisWeekCount: this.countThisWeekMessages(res.data),
-        });
+        if (res.data && res.data.messages && res.data.messages.length) {
+          this.setState({
+            messages: res.data.messages,
+            todayCount: this.countTodayMessages(res.data.messages),
+            thisWeekCount: this.countThisWeekMessages(res.data.messages),
+          });
+        }
       })
       .catch(err => console.error(err));
   }
 
-  countTodayMessages = (data) => {
+  countTodayMessages = data => {
     const today = moment().dayOfYear();
     const year = moment().year();
     return data.filter(el => {
@@ -35,7 +36,7 @@ class App extends React.Component {
     }).length;
   }
 
-  countThisWeekMessages = (data) => {
+  countThisWeekMessages = data => {
     const todayWeekNumber = moment().week();
     const year = moment().year();
     return data.filter(el => {
@@ -56,11 +57,13 @@ class App extends React.Component {
         return axios.get('http://localhost:8000/api/message')
       })
       .then(res => {
-        this.setState({
-          messages: res.data,
-          todayCount: this.countTodayMessages(res.data),
-          thisWeekCount: this.countThisWeekMessages(res.data),
-        });
+        if (res.data && res.data.messages && res.data.messages.length) {
+          this.setState({
+            messages: res.data.messages,
+            todayCount: this.countTodayMessages(res.data.messages),
+            thisWeekCount: this.countThisWeekMessages(res.data.messages),
+          });
+        }
       })
       .catch(err => console.error(err));
   }
@@ -68,7 +71,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <br/>
+        <h2>Morse Converter</h2>
         <Form onSubmit={input => this.onSubmit(input)} />
         <br/>
         <div className="outputBox">{this.state.morse}</div>

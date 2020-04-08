@@ -6,5 +6,3 @@ module.exports = {
   DB_HOST_SUFFIX: 'ds243518.mlab.com',
   DB_PORT: '43518',
 };
-
-// mongodb://<dbuser>:<dbpassword>@ds243518.mlab.com:43518/morse-db

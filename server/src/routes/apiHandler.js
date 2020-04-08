@@ -61,6 +61,7 @@ router.get('/message', async (req, res) => {
 });
 
 router.post('/convert', (request, response) => {
+  if (typeof request.body.input !== 'string') throw new Error('Input is not a String type');
   const input = request.body.input.toLowerCase();
   checkCurse(input)
     .then(res => convertChars(res))
