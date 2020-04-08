@@ -53,17 +53,15 @@ function convertChars(input) {
 
 const router = express.Router();
 
-router.get('/metrics', async (req, res) => {
-  const result = {};
-  await Message.countDocuments((err, count) => {
+router.get('/message', async (req, res) => {
+  await Message.find((err, messages) => {
     if (err) return console.error(err);
-    result['count'] = count;
+    res.status(200).send({ messages });
   });
-  res.status(200).send(result);
 });
 
 router.post('/convert', (request, response) => {
-  const input = request.body.input;
+  const input = request.body.input.toLowerCase();
   checkCurse(input)
     .then(res => convertChars(res))
     .then(res => {
