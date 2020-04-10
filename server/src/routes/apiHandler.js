@@ -47,7 +47,7 @@ function convertChars(input) {
         result += result.slice(-1) === ' ' ? '    ' : '       ';
       }
     }
-    resolve(result);
+    resolve(result.trim());
   });
 }
 
