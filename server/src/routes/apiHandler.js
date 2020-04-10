@@ -41,10 +41,10 @@ function convertChars(input) {
         if (charCodes[chars[i]]) {
           result += charCodes[chars[i]] + '   ';
         } else if (chars[i] === '@') {
-          result += '@' + '   ';
+          result += '@';
         }
       } else {
-        result += '  ';
+        result += result.slice(-1) === ' ' ? '    ' : '       ';
       }
     }
     resolve(result);
