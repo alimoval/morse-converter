@@ -20,8 +20,10 @@
 .outputBox {
   margin: 0 auto;
   width: auto;
-  max-width: 50%;
+  max-width: 70%;
   height: auto;
   min-height: 50px;
   border: 1px solid rgb(184, 184, 184);
+  overflow: auto;
+  word-wrap: break-word;
 }

@@ -74,7 +74,7 @@ class App extends React.Component {
         <h2>Morse Converter</h2>
         <Form onSubmit={input => this.onSubmit(input)} />
         <br/>
-        <div className="outputBox">{this.state.morse}</div>
+        <div className="outputBox">{this.state.morse.replace(/ /g, "\u00a0")}</div>
         <p>total messages count: {this.state.messages.length}</p>
         <p>sent today: {this.state.todayCount}</p>
         <p>sent this week: {this.state.thisWeekCount}</p>
