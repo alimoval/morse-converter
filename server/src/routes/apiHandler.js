@@ -9,7 +9,12 @@ const {
   DB_PORT,
 } = require('../database/config');
 const { Message } = require('../database/models');
-const { charCodes, curseWords } = require('../../dictionary');
+const {
+  countTodayMessages,
+  countThisWeekMessages,
+  checkCurse,
+  convertChars,
+} = require('../methods/apiMethods');
 
 mongoose.connect(
   `${DB_HOST_PREFIX}://${DB_USER}:${DB_PASSWORD}@${DB_HOST_SUFFIX}:${DB_PORT}/${DB}`,
@@ -21,43 +26,19 @@ db.once('open', () => {
   console.log('successfully connected to DB');
 });
 
-function checkCurse(input) {
-  return new Promise((resolve, reject) => {
-    const result = [];
-    input.split(' ').some(el => {
-      let foo = curseWords.indexOf(el) >= 0 ? '@' : el;
-      result.push(foo)
-    });
-    resolve(result.join(' '));
-  });
-}
-
-function convertChars(input) {
-  return new Promise((resolve, reject) => {
-    const chars = input.split('');
-    let result = '';
-    for (i = 0; i < chars.length; i++) {
-      if (chars[i] != ' ') {
-        if (charCodes[chars[i]]) {
-          result += charCodes[chars[i]] + '   ';
-        } else if (chars[i] === '@') {
-          result += '@';
-        }
-      } else {
-        result += result.slice(-1) === ' ' ? '    ' : '       ';
-      }
-    }
-    resolve(result.trim());
-  });
-}
-
 const router = express.Router();
 
-router.get('/message', async (req, res) => {
-  await Message.find((err, messages) => {
-    if (err) return console.error(err);
-    res.status(200).send({ messages });
+router.get('/metrics', async (req, res) => {
+  const messages = await Message.find((err, messages) => {
+    if (err) throw new Error(err);
+    return messages;
   });
+  let result = {
+    totalCount: messages.length,
+    todayCount: countTodayMessages(messages),
+    thisWeekCount: countThisWeekMessages(messages),
+  }
+  res.status(200).send(result);
 });
 
 router.post('/convert', (request, response) => {
